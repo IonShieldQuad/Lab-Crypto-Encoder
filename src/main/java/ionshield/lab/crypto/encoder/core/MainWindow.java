@@ -2,6 +2,7 @@ package ionshield.lab.crypto.encoder.core;
 
 
 import com.bulenkov.darcula.DarculaLaf;
+import ionshield.lab.crypto.encoder.modules.CrossroadsEncoder;
 import ionshield.lab.crypto.encoder.modules.CryptoEncoder;
 import ionshield.lab.crypto.encoder.modules.VariantEncoder;
 
@@ -24,6 +25,7 @@ public class MainWindow {
     private JTextField keyFileNameField;
     private JTabbedPane tabbedPane;
     private JButton variantEncryptButton;
+    private JButton crossroadsEncryptButton;
 
     private static String TITLE = "Lab-Crypto-Encoder";
     
@@ -31,6 +33,7 @@ public class MainWindow {
     
     private List<String> lines = new ArrayList<>();
     private List<String> keyLines = new ArrayList<>();
+    private List<String> encrypted = new ArrayList<>();
     private BufferedImage image;
     
     private MainWindow() {
@@ -58,18 +61,38 @@ public class MainWindow {
             keyLines = readFileRows(file);
         });
         
-        saveButton.addActionListener(e -> saveFile(lines));
+        saveButton.addActionListener(e -> saveFile(encrypted));
 
         variantEncryptButton.addActionListener(e -> {
             CryptoEncoder encoder = new VariantEncoder();
             if (encoder.readKey(keyLines)) {
-                lines = encoder.encode(lines);
-                if (lines == null) {
+                encrypted = encoder.encode(lines);
+                if (encrypted == null) {
                     log.setText("Encoding error");
                 }
                 else {
                     StringBuilder sb = new StringBuilder();
-                    for (String line : lines) {
+                    for (String line : encrypted) {
+                        sb.append(line).append(System.lineSeparator());
+                    }
+                    log.setText(sb.toString());
+                }
+            }
+            else {
+                log.setText("Error: The key is invalid");
+            }
+        });
+
+        crossroadsEncryptButton.addActionListener(e -> {
+            CryptoEncoder encoder = new CrossroadsEncoder();
+            if (encoder.readKey(keyLines)) {
+                encrypted = encoder.encode(lines);
+                if (encrypted == null) {
+                    log.setText("Encoding error");
+                }
+                else {
+                    StringBuilder sb = new StringBuilder();
+                    for (String line : encrypted) {
                         sb.append(line).append(System.lineSeparator());
                     }
                     log.setText(sb.toString());
