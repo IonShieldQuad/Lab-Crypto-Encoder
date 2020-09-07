@@ -70,7 +70,10 @@ public class CrossroadsEncoder implements CryptoEncoder {
                 pos = (pos + 1) % 4;
             }
             else {
-                pos = (pos - 1) % 4;
+                pos = (pos - 1);
+                while (pos < 0) {
+                    pos += 4;
+                }
             }
         }
 
