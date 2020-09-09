@@ -5,6 +5,7 @@ import com.bulenkov.darcula.DarculaLaf;
 import ionshield.lab.crypto.encoder.modules.CrossroadsEncoder;
 import ionshield.lab.crypto.encoder.modules.CryptoEncoder;
 import ionshield.lab.crypto.encoder.modules.VariantEncoder;
+import ionshield.lab.crypto.encoder.modules.XOREncoder;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -26,6 +27,7 @@ public class MainWindow {
     private JTabbedPane tabbedPane;
     private JButton variantEncryptButton;
     private JButton crossroadsEncryptButton;
+    private JButton xorEncryptButton;
 
     private static String TITLE = "Lab-Crypto-Encoder";
     
@@ -102,7 +104,29 @@ public class MainWindow {
                 log.setText("Error: The key is invalid");
             }
         });
+
+        xorEncryptButton.addActionListener(e -> {
+            CryptoEncoder encoder = new XOREncoder();
+            if (encoder.readKey(keyLines)) {
+                encrypted = encoder.encode(lines);
+                if (encrypted == null) {
+                    log.setText("Encoding error");
+                }
+                else {
+                    StringBuilder sb = new StringBuilder();
+                    for (String line : encrypted) {
+                        sb.append(line).append(System.lineSeparator());
+                    }
+                    log.setText(sb.toString());
+                }
+            }
+            else {
+                log.setText("Error: The key is invalid");
+            }
+        });
+
     }
+
     
     private File loadFile() {
         JFileChooser chooser = new JFileChooser();
