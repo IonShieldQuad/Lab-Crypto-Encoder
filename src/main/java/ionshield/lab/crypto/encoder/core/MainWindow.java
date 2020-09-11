@@ -2,10 +2,7 @@ package ionshield.lab.crypto.encoder.core;
 
 
 import com.bulenkov.darcula.DarculaLaf;
-import ionshield.lab.crypto.encoder.modules.CrossroadsEncoder;
-import ionshield.lab.crypto.encoder.modules.CryptoEncoder;
-import ionshield.lab.crypto.encoder.modules.VariantEncoder;
-import ionshield.lab.crypto.encoder.modules.XOREncoder;
+import ionshield.lab.crypto.encoder.modules.*;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -28,6 +25,7 @@ public class MainWindow {
     private JButton variantEncryptButton;
     private JButton crossroadsEncryptButton;
     private JButton xorEncryptButton;
+    private JButton adfgxEncryptButton;
 
     private static String TITLE = "Lab-Crypto-Encoder";
     
@@ -107,6 +105,26 @@ public class MainWindow {
 
         xorEncryptButton.addActionListener(e -> {
             CryptoEncoder encoder = new XOREncoder();
+            if (encoder.readKey(keyLines)) {
+                encrypted = encoder.encode(lines);
+                if (encrypted == null) {
+                    log.setText("Encoding error");
+                }
+                else {
+                    StringBuilder sb = new StringBuilder();
+                    for (String line : encrypted) {
+                        sb.append(line).append(System.lineSeparator());
+                    }
+                    log.setText(sb.toString());
+                }
+            }
+            else {
+                log.setText("Error: The key is invalid");
+            }
+        });
+
+        adfgxEncryptButton.addActionListener(e -> {
+            CryptoEncoder encoder = new ADFGXEncoder();
             if (encoder.readKey(keyLines)) {
                 encrypted = encoder.encode(lines);
                 if (encrypted == null) {
