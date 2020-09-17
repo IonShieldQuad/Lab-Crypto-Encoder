@@ -26,6 +26,7 @@ public class MainWindow {
     private JButton crossroadsEncryptButton;
     private JButton xorEncryptButton;
     private JButton adfgxEncryptButton;
+    private JButton rsaEncryptButton;
 
     private static String TITLE = "Lab-Crypto-Encoder";
     
@@ -125,6 +126,26 @@ public class MainWindow {
 
         adfgxEncryptButton.addActionListener(e -> {
             CryptoEncoder encoder = new ADFGXEncoder();
+            if (encoder.readKey(keyLines)) {
+                encrypted = encoder.encode(lines);
+                if (encrypted == null) {
+                    log.setText("Encoding error");
+                }
+                else {
+                    StringBuilder sb = new StringBuilder();
+                    for (String line : encrypted) {
+                        sb.append(line).append(System.lineSeparator());
+                    }
+                    log.setText(sb.toString());
+                }
+            }
+            else {
+                log.setText("Error: The key is invalid");
+            }
+        });
+
+        rsaEncryptButton.addActionListener(e -> {
+            CryptoEncoder encoder = new RSAEncoder();
             if (encoder.readKey(keyLines)) {
                 encrypted = encoder.encode(lines);
                 if (encrypted == null) {
